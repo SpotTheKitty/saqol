@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MPL-2.0
 
 use eframe::egui;
+use palette::{Clamp, FromColor, Mix, Oklab, Srgb};
 use saq_dsp::{EQ_BAND_COUNT, EQ_BAND_FREQUENCIES, EQ_MAX_POINTS, EqPreset, EqProfile, Mode};
 use saq_ipc::{Event, IpcClient, Request, Response};
-use palette::{Clamp, FromColor, Mix, Oklab, Srgb};
 use std::path::Path;
 use std::time::Duration;
 
@@ -15,7 +15,6 @@ const LIGHT0: egui::Color32 = egui::Color32::from_rgb(251, 241, 199);
 const LIGHT1: egui::Color32 = egui::Color32::from_rgb(235, 219, 178);
 const LIGHT3: egui::Color32 = egui::Color32::from_rgb(189, 174, 147);
 const BRIGHT_RED: egui::Color32 = egui::Color32::from_rgb(251, 73, 52);
-const BRIGHT_GREEN: egui::Color32 = egui::Color32::from_rgb(184, 187, 38);
 const BRIGHT_YELLOW: egui::Color32 = egui::Color32::from_rgb(250, 189, 47);
 const BRIGHT_BLUE: egui::Color32 = egui::Color32::from_rgb(131, 165, 152);
 const BRIGHT_PURPLE: egui::Color32 = egui::Color32::from_rgb(211, 134, 155);
@@ -272,22 +271,15 @@ impl eframe::App for SaqApp {
                     })
                     .inner;
 
-                let (room, clarity, night, pitch) = ui
+                let (earwax, night, pitch) = ui
                     .horizontal(|ui| {
                         (
                             mode_button(
                                 ui,
-                                "ROOM",
-                                ModeIcon::Room,
-                                BRIGHT_GREEN,
-                                self.mode == Mode::Room,
-                            ),
-                            mode_button(
-                                ui,
-                                "CLARITY",
-                                ModeIcon::Clarity,
+                                "EARWAX",
+                                ModeIcon::Earwax,
                                 BRIGHT_YELLOW,
-                                self.mode == Mode::Clarity,
+                                self.mode == Mode::Earwax,
                             ),
                             mode_button(
                                 ui,
@@ -309,10 +301,8 @@ impl eframe::App for SaqApp {
                     toggle(self.mode, Mode::SpatialStereo)
                 } else if spatial_surround.clicked() {
                     toggle(self.mode, Mode::SpatialSurround)
-                } else if room.clicked() {
-                    toggle(self.mode, Mode::Room)
-                } else if clarity.clicked() {
-                    toggle(self.mode, Mode::Clarity)
+                } else if earwax.clicked() {
+                    toggle(self.mode, Mode::Earwax)
                 } else if night.clicked() {
                     toggle(self.mode, Mode::Night)
                 } else {
@@ -891,8 +881,7 @@ enum ModeIcon {
     Stereo,
     Orbit,
     Cube,
-    Room,
-    Clarity,
+    Earwax,
     Night,
 }
 
@@ -950,13 +939,15 @@ impl ModeIcon {
                 "#...#...#",
             ],
             Self::Stereo => &[
-                ".###...###.",
-                ".#.#...#.#.",
-                ".###...###.",
-                ".#.#...#.#.",
-                ".###...###.",
-                ".#.#...#.#.",
-                ".###...###.",
+                ".........",
+                ".##...##.",
+                ".#.#.#.#.",
+                ".##...##.",
+                ".#.#.#.#.",
+                ".##...##.",
+                ".#.#.#.#.",
+                ".##...##.",
+                ".........",
             ],
             Self::Orbit => &[
                 "..#####..",
@@ -980,25 +971,16 @@ impl ModeIcon {
                 "..#####..",
                 "....#....",
             ],
-            Self::Room => &[
-                "......#..",
-                ".......#.",
-                "....#..#.",
-                ".....#..#",
-                "..#..#..#",
-                ".....#..#",
-                "....#..#.",
-                ".......#.",
-                "......#..",
-            ],
-            Self::Clarity => &[
-                "......#..",
+            Self::Earwax => &[
+                "..####...",
+                ".#....##.",
+                "#......#.",
+                "#..###.#.",
+                "#..#..##.",
+                "#..##.#..",
+                ".#...##..",
                 "..#...#..",
-                "..#..#.#.",
-                ".#.#.#.#.",
-                ".#.#.#..#",
-                "#...#...#",
-                "#.......#",
+                "...###...",
             ],
             Self::Night => &[
                 ".........",

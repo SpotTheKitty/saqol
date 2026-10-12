@@ -10,11 +10,10 @@ pub enum Mode {
     #[default]
     SurroundSound = 1,
     SpatialFilter = 2,
-    Room = 3,
-    Clarity = 4,
     Night = 5,
     SpatialStereo = 6,
     SpatialSurround = 7,
+    Earwax = 8,
 }
 
 impl Mode {
@@ -22,11 +21,10 @@ impl Mode {
         match value {
             1 => Self::SurroundSound,
             2 => Self::SpatialFilter,
-            3 => Self::Room,
-            4 => Self::Clarity,
             5 => Self::Night,
             6 => Self::SpatialStereo,
             7 => Self::SpatialSurround,
+            8 => Self::Earwax,
             _ => Self::Off,
         }
     }
@@ -38,11 +36,10 @@ impl fmt::Display for Mode {
             Self::Off => "off",
             Self::SpatialFilter => "spatial-filter",
             Self::SurroundSound => "surround-sound",
-            Self::Room => "room",
-            Self::Clarity => "clarity",
             Self::Night => "night",
             Self::SpatialStereo => "spatial-stereo",
             Self::SpatialSurround => "spatial-surround",
+            Self::Earwax => "earwax",
         })
     }
 }

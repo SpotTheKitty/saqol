@@ -1,15 +1,15 @@
 // SPDX-License-Identifier: MPL-2.0
 
-use saq_dsp::{
-    RoomEngine, EqEngine, EqProfile, ClarityEngine, Mode, NightEngine, PitchEngine,
-    SAMPLE_RATE, SpatialFilterEngine, SpatialStereoEngine, SpatialSurroundEngine, SurroundEngine,
-};
 use pipewire as pw;
 use pw::{
     channel,
     filter::{Filter, FilterFlags, FilterPortFlags, FilterRc, PortHandle},
     properties::properties,
     spa::utils::Direction,
+};
+use saq_dsp::{
+    EarwaxEngine, EqEngine, EqProfile, Mode, NightEngine, PitchEngine, SAMPLE_RATE,
+    SpatialFilterEngine, SpatialStereoEngine, SpatialSurroundEngine, SurroundEngine,
 };
 
 use std::{cell::Cell, rc::Rc, sync::Arc, time::Duration};
@@ -52,8 +52,7 @@ struct Processor {
     spatial_stereo: Box<SpatialStereoEngine>,
     spatial_surround: Box<SpatialSurroundEngine>,
     surround: Box<SurroundEngine>,
-    room: Box<RoomEngine>,
-    clarity: Box<ClarityEngine>,
+    earwax: Box<EarwaxEngine>,
     night: Box<NightEngine>,
     eq: Box<EqEngine>,
     pitch: Box<PitchEngine>,
@@ -71,8 +70,7 @@ impl Processor {
         self.spatial_stereo.reset();
         self.spatial_surround.reset();
         self.surround.reset();
-        self.room.reset();
-        self.clarity.reset();
+        self.earwax.reset();
         self.night.reset();
         self.eq.reset();
         self.pitch.reset();
@@ -96,9 +94,8 @@ impl Processor {
             Mode::SpatialStereo => self.spatial_stereo.reset(),
             Mode::SpatialSurround => self.spatial_surround.reset(),
             Mode::SurroundSound => self.surround.reset(),
-            Mode::Room => self.room.reset(),
-            Mode::Clarity => self.clarity.reset(),
             Mode::Night => self.night.reset(),
+            Mode::Earwax => self.earwax.reset(),
         }
         self.active_mode = mode;
     }
@@ -144,8 +141,7 @@ pub fn run_audio_engine(
         spatial_stereo: SpatialStereoEngine::new(),
         spatial_surround: SpatialSurroundEngine::new(),
         surround: SurroundEngine::new(),
-        room: RoomEngine::new(),
-        clarity: ClarityEngine::new(),
+        earwax: EarwaxEngine::new(),
         night: NightEngine::new(),
         eq: EqEngine::new(),
         pitch: PitchEngine::new(),
@@ -221,9 +217,8 @@ pub fn run_audio_engine(
                             .surround
                             .process(input_left[i], input_right[i], subwoofer)
                     }
-                    Mode::Room => processor.room.process(input_left[i], input_right[i]),
-                    Mode::Clarity => processor.clarity.process(input_left[i], input_right[i]),
                     Mode::Night => processor.night.process(input_left[i], input_right[i]),
+                    Mode::Earwax => processor.earwax.process(input_left[i], input_right[i]),
                 };
 
                 // FIXME: +db changes cause a lot of tearing when used improperly

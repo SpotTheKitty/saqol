@@ -17,6 +17,7 @@ fi
 sudo rm -f /usr/lib/systemd/user/saqd.service
 
 systemctl --user daemon-reload
-systemctl --user enable --now saq.service
+systemctl --user enable saq.service
+systemctl --user restart saq.service
 
 printf '%s\n' 'Śaq is running. Control it via the GUI or CLI controller.'

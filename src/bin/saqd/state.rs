@@ -5,9 +5,6 @@ use saq_ipc::{Event, Request, Response};
 use serde::{Deserialize, Serialize};
 use std::sync::atomic::{AtomicBool, AtomicU8, AtomicU32, Ordering};
 
-// FIXME: State graph should allow more complicate transition
-// structure. Clarity should be valid across different modes
-// and a two-state solution is neccesary.
 #[derive(Serialize, Deserialize)]
 pub struct AudioState {
     #[serde(with = "atomic_f32")]

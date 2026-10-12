@@ -63,8 +63,6 @@ mod surround;
 #[cfg(feature = "native")]
 mod biquad;
 #[cfg(feature = "native")]
-mod clarity;
-#[cfg(feature = "native")]
 mod crossfeed;
 #[cfg(feature = "native")]
 mod crossover;
@@ -75,6 +73,8 @@ mod delay;
 #[cfg(feature = "native")]
 mod early_reflections;
 #[cfg(feature = "native")]
+mod earwax;
+#[cfg(feature = "native")]
 mod itd;
 #[cfg(feature = "native")]
 mod mode;
@@ -84,8 +84,6 @@ mod night;
 mod pitch;
 #[cfg(feature = "native")]
 mod reverb;
-#[cfg(feature = "native")]
-mod room;
 #[cfg(feature = "native")]
 mod spatial_filter;
 #[cfg(feature = "native")]
@@ -99,15 +97,13 @@ pub use surround::SurroundEngine;
 #[cfg(feature = "native")]
 pub use biquad::Biquad;
 #[cfg(feature = "native")]
-pub use clarity::ClarityEngine;
+pub use earwax::EarwaxEngine;
 #[cfg(feature = "native")]
 pub use mode::Mode;
 #[cfg(feature = "native")]
 pub use night::NightEngine;
 #[cfg(all(feature = "native", not(target_arch = "wasm32")))]
 pub use pitch::PitchEngine;
-#[cfg(feature = "native")]
-pub use room::RoomEngine;
 #[cfg(feature = "native")]
 pub use spatial_filter::SpatialFilterEngine;
 #[cfg(feature = "native")]
